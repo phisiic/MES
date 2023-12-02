@@ -1,6 +1,7 @@
 from Classes import Node, Element
 from ElementUniwersalny import UniversalElement
 from MacierzH import no_integration_nodes
+from tabulate import tabulate
 
 n1 = Node(1, 0.1, 0.005, 1)
 n2 = Node(2, 0.0546918, 0.005, 1)
@@ -442,6 +443,6 @@ class WektorP:
 # a.print_matrix_hbc()
 # a.print_total_matrix()
 
-a = WektorP(elem, no_integration_nodes, 300, 1200)
-a.print_p_vectors()
-a.print_total_vector()
+# a = WektorP(elem, no_integration_nodes, 300, 1200)
+# a.print_p_vectors()
+# a.print_total_vector()

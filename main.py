@@ -1,6 +1,7 @@
 from Classes import Node, Element, Global, Grid
 from MacierzH import MatrixH, no_integration_nodes
 from WektorP import MacierzHBC, WektorP
+from Agregacja import MacierzHGlobalna, WektorPGlobalny
 
 data = {}
 nodes = {}
@@ -11,10 +12,11 @@ bc_section = False
 h_matrices = []
 bc_nodes = set()
 hbc_matrices = []
+summed_matrices = []
 p_vectors = []
 
-plik = "Test1_4_4.txt"
-# plik = "Test2_4_4_MixGrid.txt"
+# plik = "Test1_4_4.txt"
+plik = "Test2_4_4_MixGrid.txt"
 
 with open(plik, "r") as file:
     for line in file:
@@ -111,25 +113,32 @@ for element in elements:
 
     temp_h = MatrixH(element, no_integration_nodes, global_data.conductivity)
     temp_h.print_total_matrix()
-    h_matrices.append(temp_h.total_matrix)
+    h_matrices.append(temp_h)
 
     temp_hbc = MacierzHBC(element, no_integration_nodes, global_data.alfa)
     hbc_matrices.append(temp_hbc.hbc_matrix)
 
     temp_p_vector = WektorP(element, no_integration_nodes, global_data.alfa, global_data.tot)
-    p_vectors.append(temp_p_vector.p_vector)
+    p_vectors.append(temp_p_vector)
 
+for h_matrix, hbc_matrix in zip(h_matrices, hbc_matrices):
+    # Create a new MatrixH instance
+    summed_matrix = MatrixH(h_matrix.element, no_integration_nodes, global_data.conductivity)
+
+    # Use the add_hbc_matrix method to add the hbc_matrix to the total_matrix
+    summed_matrix.add_hbc_matrix(hbc_matrix)
+
+    # Append the summed matrix to the list
+    summed_matrices.append(summed_matrix)
 
 grid.printGrid()
 
-count: int = 1
-for matrix in h_matrices:
-    print(f"Matrix H {count}")
-    for i in range(4):
-        for j in range(4):
-            print(matrix[i][j], end="\t")
-        print()
-    count += 1
+# count: int = 1
+# for matrix in h_matrices:
+#     print(f"Matrix H {count}")
+#     matrix.print_total_matrix()
+#     print()
+#     count += 1
 
 count: int = 1
 for matrix in hbc_matrices:
@@ -143,7 +152,27 @@ for matrix in hbc_matrices:
 count: int = 1
 for vector in p_vectors:
     print(f"P Vector {count}")
-    for i in range(4):
-        print("{:.10f}".format(vector[i]), end="\t")
+    vector.print_total_vector()
     print()
     count += 1
+
+# # Iterate through the matrices in h_matrices and hbc_matrices
+# for h_matrix, hbc_matrix in zip(h_matrices, hbc_matrices):
+#     # Initialize a new matrix for the sum
+#     summed_matrix = [[0.0] * 4 for _ in range(4)]
+#
+#     # Add corresponding elements of h_matrix and hbc_matrix
+#     for i in range(4):
+#         for j in range(4):
+#             summed_matrix[i][j] = h_matrix.total_matrix[i][j] + hbc_matrix[i][j]
+#
+#     # Append the summed matrix to the list
+#     summed_matrices.append(summed_matrix)
+
+print("\n Macierz H Globalna")
+macierz_h_globalna = MacierzHGlobalna(global_data.elementsNo, global_data.nodesNo, summed_matrices)
+macierz_h_globalna.print_global_matrix()
+
+print("\n Wektor P Globalny")
+wektor_p_globalny = WektorPGlobalny(global_data.elementsNo, global_data.nodesNo, p_vectors)
+wektor_p_globalny.print_global_vector()

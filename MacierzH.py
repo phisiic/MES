@@ -1,6 +1,7 @@
 from Classes import Node
 from ElementUniwersalny import UniversalElement
 from Classes import Element
+from tabulate import tabulate
 
 no_integration_nodes = 2
 
@@ -320,6 +321,7 @@ class TransposedMatrix:
 
 class MatrixH:
     def __init__(self, _elem, no_nodes, k):
+        self.element = _elem
         self.matrices = TransposedMatrix(_elem, no_nodes, k)
         self.k = k
         self.matrices_with_weights = []
@@ -366,15 +368,21 @@ class MatrixH:
         return temp_matrix
 
     def print_total_matrix(self):
+        headers = [""] + list(range(1, len(self.total_matrix[0]) + 1))
+        table = [[i + 1] + row for i, row in enumerate(self.total_matrix)]
         print("\nTotal Matrix:")
-        for row in self.total_matrix:
-            for value in row:
-                print(f"{value:.6f}" if isinstance(value, (float, int)) else value, end="\t")
-            print()
+        print(tabulate(table, headers=headers, tablefmt="fancy_grid"))
 
     def get_matrix_h(self):
         return self.total_matrix
 
+    def add_hbc_matrix(self, hbc_matrix):
+        if len(hbc_matrix) != 4 or any(len(row) != 4 for row in hbc_matrix):
+            raise ValueError("The provided matrix should be a 4x4 matrix")
+
+        for i in range(4):
+            for j in range(4):
+                self.total_matrix[i][j] += hbc_matrix[i][j]
 
 # a = TransposedMatrix(elem_, no_integration_nodes)
 # # a.print_matrices()
