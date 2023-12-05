@@ -2,6 +2,7 @@ from Classes import Node, Element, Global, Grid
 from MacierzH import MatrixH, no_integration_nodes
 from WektorP import MacierzHBC, WektorP
 from Agregacja import MacierzHGlobalna, WektorPGlobalny
+from GaussianElimination import gaussian_elimination
 
 data = {}
 nodes = {}
@@ -176,3 +177,12 @@ macierz_h_globalna.print_global_matrix()
 print("\n Wektor P Globalny")
 wektor_p_globalny = WektorPGlobalny(global_data.elementsNo, global_data.nodesNo, p_vectors)
 wektor_p_globalny.print_global_vector()
+
+
+
+temp_solution = gaussian_elimination(macierz_h_globalna, wektor_p_globalny)
+
+
+# Print the solution
+print("Temperature vector t:")
+print(temp_solution)
