@@ -3,7 +3,7 @@ from ElementUniwersalny import UniversalElement
 from Classes import Element
 from tabulate import tabulate
 
-no_integration_nodes = 2
+no_integration_nodes = 4
 
 # n1 = Node(1, 0, 0)
 # n2 = Node(2, 0.025, 0)
@@ -21,8 +21,8 @@ elem.addNode(n3)
 elem.addNode(n4)
 
 _universal = UniversalElement(no_integration_nodes)
-_universal.print_ksi_array()
-_universal.print_eta_array()
+# _universal.print_ksi_array()
+# _universal.print_eta_array()
 
 ksi = _universal.ksi_derivatives
 eta = _universal.eta_derivatives

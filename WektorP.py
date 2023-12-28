@@ -20,7 +20,7 @@ elem.addNode(n3)
 elem.addNode(n4)
 
 _universal = UniversalElement(no_integration_nodes)
-_universal.print_integration_points()
+#_universal.print_integration_points()
 
 # Function to print a 2D matrix
 def print_matrix(matrix, name):
@@ -114,8 +114,8 @@ class MacierzHBC:
             tmp = _universal.weights[weight].x
             self.weights.append(tmp)
 
-        for weight in self.weights:
-            print(weight)
+        # for weight in self.weights:
+        #     print(weight)
 
         x_cords = []
         y_cords = []
@@ -191,20 +191,20 @@ class MacierzHBC:
         if self.sciany_z_bc[nr_boku] > 0:
             if nr_boku == 0:
                 detJ = calculate_distance(self.element.connected_nodes[0], self.element.connected_nodes[1]) * 0.5
-                print("DET J 0 - ", detJ)
+                #print("DET J 0 - ", detJ)
                 for i in range(len(hbc)):
                     hbc[i][0] = N1(self.punkty_bc0[i].x, self.punkty_bc0[i].y)
-                    print(self.punkty_bc0[i].x, self.punkty_bc0[i].y)
+                    #print(self.punkty_bc0[i].x, self.punkty_bc0[i].y)
                     hbc[i][1] = N2(self.punkty_bc0[i].x, self.punkty_bc0[i].y)
                     hbc[i][2] = N3(self.punkty_bc0[i].x, self.punkty_bc0[i].y)
                     hbc[i][3] = N4(self.punkty_bc0[i].x, self.punkty_bc0[i].y)
-                    print(hbc[i])
+                    #print(hbc[i])
 
             elif nr_boku == 1:
                 detJ = calculate_distance(self.element.connected_nodes[1], self.element.connected_nodes[2]) * 0.5
-                print("DET J 1 - ", detJ)
+                #print("DET J 1 - ", detJ)
                 for i in range(len(hbc)):
-                    print(self.punkty_bc1[i].x, self.punkty_bc1[i].y)
+                    #print(self.punkty_bc1[i].x, self.punkty_bc1[i].y)
                     hbc[i][0] = N1(self.punkty_bc1[i].x, self.punkty_bc1[i].y)
                     hbc[i][1] = N2(self.punkty_bc1[i].x, self.punkty_bc1[i].y)
                     hbc[i][2] = N3(self.punkty_bc1[i].x, self.punkty_bc1[i].y)
@@ -212,9 +212,9 @@ class MacierzHBC:
 
             elif nr_boku == 2:
                 detJ = calculate_distance(self.element.connected_nodes[2], self.element.connected_nodes[3]) * 0.5
-                print("DET J 2 - ", detJ)
+                #print("DET J 2 - ", detJ)
                 for i in range(len(hbc)):
-                    print(self.punkty_bc2[i].x, self.punkty_bc2[i].y)
+                    #print(self.punkty_bc2[i].x, self.punkty_bc2[i].y)
                     hbc[i][0] = N1(self.punkty_bc2[i].x, self.punkty_bc2[i].y)
                     hbc[i][1] = N2(self.punkty_bc2[i].x, self.punkty_bc2[i].y)
                     hbc[i][2] = N3(self.punkty_bc2[i].x, self.punkty_bc2[i].y)
@@ -222,9 +222,9 @@ class MacierzHBC:
 
             elif nr_boku == 3:
                 detJ = calculate_distance(self.element.connected_nodes[3], self.element.connected_nodes[0]) * 0.5
-                print("DET J 3 - ", detJ)
+                #print("DET J 3 - ", detJ)
                 for i in range(len(hbc)):
-                    print(self.punkty_bc3[i].x, self.punkty_bc3[i].y)
+                    #print(self.punkty_bc3[i].x, self.punkty_bc3[i].y)
                     hbc[i][0] = N1(self.punkty_bc3[i].x, self.punkty_bc3[i].y)
                     hbc[i][1] = N2(self.punkty_bc3[i].x, self.punkty_bc3[i].y)
                     hbc[i][2] = N3(self.punkty_bc3[i].x, self.punkty_bc3[i].y)
@@ -264,7 +264,7 @@ class MacierzHBC:
                 for hbc_value_index, hbc_value in enumerate(hbc_row):
                     matrixHBC[hbc_row_index][hbc_value_index] *= detJ
 
-            print_matrix(matrixHBC, f"Final matrixHBC (After multiplying by detJ - {detJ})")
+            #print_matrix(matrixHBC, f"Final matrixHBC (After multiplying by detJ - {detJ})")
 
         return matrixHBC
 
@@ -370,60 +370,60 @@ class WektorP:
         if self.sciany_z_bc[nr_boku] > 0:
             if nr_boku == 0:
                 detJ = calculate_distance(self.element.connected_nodes[0], self.element.connected_nodes[1]) * 0.5
-                print("DET J 0 - ", detJ)
+                #print("DET J 0 - ", detJ)
                 for i in range(len(n_funcs)):
                     n_funcs[i][0] = N1(self.punkty_bc0[i].x, self.punkty_bc0[i].y)
                     n_funcs[i][1] = N2(self.punkty_bc0[i].x, self.punkty_bc0[i].y)
                     n_funcs[i][2] = N3(self.punkty_bc0[i].x, self.punkty_bc0[i].y)
                     n_funcs[i][3] = N4(self.punkty_bc0[i].x, self.punkty_bc0[i].y)
-                    print(f"n_funcs[{i}] =", n_funcs[i])
+                    #print(f"n_funcs[{i}] =", n_funcs[i])
 
             elif nr_boku == 1:
                 detJ = calculate_distance(self.element.connected_nodes[1], self.element.connected_nodes[2]) * 0.5
-                print("DET J 1 - ", detJ)
+                #print("DET J 1 - ", detJ)
                 for i in range(len(n_funcs)):
                     n_funcs[i][0] = N1(self.punkty_bc1[i].x, self.punkty_bc1[i].y)
                     n_funcs[i][1] = N2(self.punkty_bc1[i].x, self.punkty_bc1[i].y)
                     n_funcs[i][2] = N3(self.punkty_bc1[i].x, self.punkty_bc1[i].y)
                     n_funcs[i][3] = N4(self.punkty_bc1[i].x, self.punkty_bc1[i].y)
-                    print(f"n_funcs[{i}] =", n_funcs[i])
+                    #print(f"n_funcs[{i}] =", n_funcs[i])
 
             elif nr_boku == 2:
                 detJ = calculate_distance(self.element.connected_nodes[2], self.element.connected_nodes[3]) * 0.5
-                print("DET J 2 - ", detJ)
+                #print("DET J 2 - ", detJ)
                 for i in range(len(n_funcs)):
                     n_funcs[i][0] = N1(self.punkty_bc2[i].x, self.punkty_bc2[i].y)
                     n_funcs[i][1] = N2(self.punkty_bc2[i].x, self.punkty_bc2[i].y)
                     n_funcs[i][2] = N3(self.punkty_bc2[i].x, self.punkty_bc2[i].y)
                     n_funcs[i][3] = N4(self.punkty_bc2[i].x, self.punkty_bc2[i].y)
-                    print(f"n_funcs[{i}] =", n_funcs[i])
+                    #print(f"n_funcs[{i}] =", n_funcs[i])
 
             elif nr_boku == 3:
                 detJ = calculate_distance(self.element.connected_nodes[3], self.element.connected_nodes[0]) * 0.5
-                print("DET J 3 - ", detJ)
+                #print("DET J 3 - ", detJ)
                 for i in range(len(n_funcs)):
                     n_funcs[i][0] = N1(self.punkty_bc3[i].x, self.punkty_bc3[i].y)
                     n_funcs[i][1] = N2(self.punkty_bc3[i].x, self.punkty_bc3[i].y)
                     n_funcs[i][2] = N3(self.punkty_bc3[i].x, self.punkty_bc3[i].y)
                     n_funcs[i][3] = N4(self.punkty_bc3[i].x, self.punkty_bc3[i].y)
-                    print(f"n_funcs[{i}] =", n_funcs[i])
+                    #print(f"n_funcs[{i}] =", n_funcs[i])
 
             for i in range(self.no_int_nodes):
                 for j in range(4):
                     temp = n_funcs[i][j] * self.weights[i] * self.ambient_temp
                     p_vector[j] += temp
-                    print(f"p_vector[{j}] += {temp}")
+                    #print(f"p_vector[{j}] += {temp}")
 
 
-            print(f"p_vector before detJ", p_vector)
+            #print(f"p_vector before detJ", p_vector)
 
 
             for i in range(4):
                 temp = p_vector[i] * self.alfa * detJ
                 p_vector[i] = temp
-                print(f"p_vector[{i}] *= {self.alfa} * {detJ}")
+                #print(f"p_vector[{i}] *= {self.alfa} * {detJ}")
 
-            print(f"p_vector after detJ", p_vector)
+            #print(f"p_vector after detJ", p_vector)
 
         return p_vector
 

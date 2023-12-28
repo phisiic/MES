@@ -1,8 +1,9 @@
 from Classes import Node, Element, Global, Grid
 from MacierzH import MatrixH, no_integration_nodes
 from WektorP import MacierzHBC, WektorP
-from Agregacja import MacierzHGlobalna, WektorPGlobalny
+from Agregacja import MacierzHGlobalna, WektorPGlobalny, MacierzCGlobalna, sum_matrices, sum_vectors
 from GaussianElimination import gaussian_elimination
+from MacierzC import MacierzC
 
 data = {}
 nodes = {}
@@ -15,9 +16,10 @@ bc_nodes = set()
 hbc_matrices = []
 summed_matrices = []
 p_vectors = []
+c_matrices = []
 
-# plik = "Test1_4_4.txt"
-plik = "Test2_4_4_MixGrid.txt"
+plik = "Test1_4_4.txt"
+#plik = "Test2_4_4_MixGrid.txt"
 
 with open(plik, "r") as file:
     for line in file:
@@ -109,11 +111,11 @@ for node in nodes.values():
     grid.addNode(node)
 
 for element in elements:
-    element.printElement()
+    #element.printElement()
     grid.addElement(element)
 
     temp_h = MatrixH(element, no_integration_nodes, global_data.conductivity)
-    temp_h.print_total_matrix()
+    #temp_h.print_total_matrix()
     h_matrices.append(temp_h)
 
     temp_hbc = MacierzHBC(element, no_integration_nodes, global_data.alfa)
@@ -121,6 +123,9 @@ for element in elements:
 
     temp_p_vector = WektorP(element, no_integration_nodes, global_data.alfa, global_data.tot)
     p_vectors.append(temp_p_vector)
+
+    temp_c = MacierzC(global_data.specificHeat, global_data.density, element)
+    c_matrices.append(temp_c)
 
 for h_matrix, hbc_matrix in zip(h_matrices, hbc_matrices):
     # Create a new MatrixH instance
@@ -132,7 +137,7 @@ for h_matrix, hbc_matrix in zip(h_matrices, hbc_matrices):
     # Append the summed matrix to the list
     summed_matrices.append(summed_matrix)
 
-grid.printGrid()
+#grid.printGrid()
 
 # count: int = 1
 # for matrix in h_matrices:
@@ -141,21 +146,21 @@ grid.printGrid()
 #     print()
 #     count += 1
 
-count: int = 1
-for matrix in hbc_matrices:
-    print(f"Matrix HBC {count}")
-    for i in range(4):
-        for j in range(4):
-            print("{:.10f}".format(matrix[i][j]), end="\t")
-        print()
-    count += 1
+# count: int = 1
+# for matrix in hbc_matrices:
+#     print(f"Matrix HBC {count}")
+#     for i in range(4):
+#         for j in range(4):
+#             print("{:.10f}".format(matrix[i][j]), end="\t")
+#         print()
+#     count += 1
 
-count: int = 1
-for vector in p_vectors:
-    print(f"P Vector {count}")
-    vector.print_total_vector()
-    print()
-    count += 1
+# count: int = 1
+# for vector in p_vectors:
+#     print(f"P Vector {count}")
+#     vector.print_total_vector()
+#     print()
+#     count += 1
 
 # # Iterate through the matrices in h_matrices and hbc_matrices
 # for h_matrix, hbc_matrix in zip(h_matrices, hbc_matrices):
@@ -170,19 +175,36 @@ for vector in p_vectors:
 #     # Append the summed matrix to the list
 #     summed_matrices.append(summed_matrix)
 
-print("\n Macierz H Globalna")
-macierz_h_globalna = MacierzHGlobalna(global_data.elementsNo, global_data.nodesNo, summed_matrices)
-macierz_h_globalna.print_global_matrix()
+#print("\n Macierz H Globalna")
+h_glob = MacierzHGlobalna(global_data.elementsNo, global_data.nodesNo, summed_matrices)
+#macierz_h_globalna.print_global_matrix()
 
-print("\n Wektor P Globalny")
-wektor_p_globalny = WektorPGlobalny(global_data.elementsNo, global_data.nodesNo, p_vectors)
-wektor_p_globalny.print_global_vector()
+#print("\n Wektor P Globalny")
+p_glob = WektorPGlobalny(global_data.elementsNo, global_data.nodesNo, p_vectors)
+#wektor_p_globalny.print_global_vector()
 
+#print("\n Macierz C Globalna")
+c_glob = MacierzCGlobalna(global_data.elementsNo, global_data.nodesNo, c_matrices)
+#macierz_c_globalna.print_global_matrix()
+c_glob.divide_matrix_by_dtau(global_data.simStepTime)
+#macierz_c_globalna.print_global_matrix()
 
+t0_vector = [global_data.initialTemp] * global_data.nodesNo
+current_time = 50
+while current_time <= global_data.simTime:
+    macierz_h_globalna = h_glob
+    wektor_p_globalny = p_glob
+    macierz_c_globalna = c_glob
 
-temp_solution = gaussian_elimination(macierz_h_globalna, wektor_p_globalny)
+    matrix_c_h_summed = sum_matrices(macierz_c_globalna.c_matrix_global, macierz_h_globalna.h_matrix_global)
+    matrix_c_multiplied = macierz_c_globalna.multiply_matrix_by_vector(t0_vector)
+    vectors_summed = sum_vectors(matrix_c_multiplied, wektor_p_globalny.p_vector_global)
 
+    solution = gaussian_elimination(matrix_c_h_summed, vectors_summed)
+    print(f"Solution in time {current_time}:")
+    for value in solution:
+        print(f"{value:.2f}", end=", ")
+    print()
 
-# Print the solution
-print("Temperature vector t:")
-print(temp_solution)
+    t0_vector = solution
+    current_time += global_data.simStepTime

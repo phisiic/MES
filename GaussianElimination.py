@@ -1,6 +1,6 @@
-def gaussian_elimination(macierz_h_globalna, wektor_p_globalny):
+def gaussian_elimination(matrix_c_h_summed, vectors_summed):
     # Combine the matrices and vectors into augmented matrices
-    augmented_matrix = [row + [val] for row, val in zip(macierz_h_globalna.h_matrix_global, wektor_p_globalny.p_vector_global)]
+    augmented_matrix = [row + [val] for row, val in zip(matrix_c_h_summed, vectors_summed)]
 
     # Ensure all rows in augmented_matrices have the same length
     max_row_length = max(len(row) for row in augmented_matrix)

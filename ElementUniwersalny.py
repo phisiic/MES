@@ -35,18 +35,18 @@ def n4_eta(ksi):
 
 
 class UniversalElement:
-    def __init__(self, no_nodes):
-        self.no_nodes = no_nodes
-        self.temp = GaussianIntegral(no_nodes)
-        rows, cols = (4, no_nodes*no_nodes)
+    def __init__(self, no_int_nodes):
+        self.no_int_nodes = no_int_nodes
+        self.temp = GaussianIntegral(no_int_nodes)
+        rows, cols = (4, no_int_nodes * no_int_nodes)
         self.ksi_derivatives = [[None for _ in range(cols)] for _ in range(rows)]
         self.eta_derivatives = [[None for _ in range(cols)] for _ in range(rows)]
         self.integration_points = []
         self.weights = []
 
         iterations = 1
-        for i in range(no_nodes):
-            for j in range(no_nodes):
+        for i in range(no_int_nodes):
+            for j in range(no_int_nodes):
                 point = Node(iterations, self.temp.nodes[j], self.temp.nodes[i])
                 weight = Node(iterations, self.temp.weights[j], self.temp.weights[i])
                 self.integration_points.append(point)
@@ -65,7 +65,7 @@ class UniversalElement:
 
     def print_ksi_array(self):
         print("Ksi:")
-        for col in range(self.no_nodes ** 2):
+        for col in range(self.no_int_nodes ** 2):
             for row in range(4):
                 value = self.ksi_derivatives[row][col]
                 print(f"{value:.6f}", end="\t")
@@ -73,7 +73,7 @@ class UniversalElement:
 
     def print_eta_array(self):
         print("Eta:")
-        for col in range(self.no_nodes ** 2):
+        for col in range(self.no_int_nodes ** 2):
             for row in range(4):
                 value = self.eta_derivatives[row][col]
                 print(f"{value:.6f}", end="\t")
